@@ -1,33 +1,34 @@
 import csv
 from datetime import datetime
 
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
 
-filename = 'data/sitka_weather_07-2018_simple.csv'
-with open(filename) as dayweather:
-    reader = csv.reader(dayweather)
+filename = 'data/sitka_weather_2018_simple.csv'
+with open(filename) as f:
+    reader = csv.reader(f)
     header_row = next(reader)
 
-    dates, high_temps = [], []
-    for r in reader:
-        crnt_date = datetime.strptime(r[2], '%Y-%m-%d')
-        high = r[5]
-        high_temps.append(high)
-        dates.append(crnt_date)
+    # Get dates and high temperatures from this file.
+    dates, highs = [], []
+    for row in reader:
+        current_date = datetime.strptime(row[2], '%Y-%m-%d')
+        dates.append(current_date)
+        high = int(row[5])
+        highs.append(high)
 
-    # plot high temperatures
+# Plot the high temperatures.
+plt.xkcd()
+fig, ax = plt.subplots()
+ax.plot(dates, highs, c='red', label="High Temps")
 
-    plt.xkcd()  # using xkcd style
-    fig, ax = plt.subplots()
-    ax.plot(dates, high_temps, label="High Temperatures")
+# Format plot.
+plt.title("Daily high temperatures - 2018", fontsize=24)
+plt.xlabel('Days', fontsize=16)
+fig.autofmt_xdate()
+plt.ylabel("Temperature (F)", fontsize=16)
+plt.tick_params(axis='both', which='major', labelsize=16)
 
-    # format style of the plot
-    plt.title("Daily High Temperatures of Sitka")
-    plt.xlabel("days")
-    fig.autofmt_xdate()
-    plt.ylabel("high temperatures")
-    plt.tick_params('both', which='minor', labelsize=16)
+plt.tight_layout()
 
-    plt.legend()
-    plt.tight_layout()
-    plt.show()
+
+plt.show()
